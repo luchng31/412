@@ -1,0 +1,230 @@
+# =========================
+# BACnet/IP dictionary for bacnet-stack apps/server/main.c
+# direct source program + preeny(desock/desockmulti)
+# =========================
+
+# ---- BVLC / BACnet-IP ----
+bvlc_type="\x81"
+
+bvlc_result="\x00"
+bvlc_write_bdt="\x01"
+bvlc_read_bdt="\x02"
+bvlc_read_bdt_ack="\x03"
+bvlc_forwarded_npdu="\x04"
+bvlc_register_fd="\x05"
+bvlc_read_fdt="\x06"
+bvlc_read_fdt_ack="\x07"
+bvlc_delete_fdt="\x08"
+bvlc_distribute_broadcast="\x09"
+bvlc_original_unicast="\x0a"
+bvlc_original_broadcast="\x0b"
+
+bip_hdr_unicast="\x81\x0a"
+bip_hdr_broadcast="\x81\x0b"
+bip_hdr_forwarded="\x81\x04"
+
+len_0004="\x00\x04"
+len_0006="\x00\x06"
+len_0008="\x00\x08"
+len_000a="\x00\x0a"
+len_000c="\x00\x0c"
+len_0010="\x00\x10"
+len_0011="\x00\x11"
+len_0015="\x00\x15"
+len_0018="\x00\x18"
+len_0020="\x00\x20"
+len_0040="\x00\x40"
+len_0080="\x00\x80"
+len_0100="\x01\x00"
+len_0200="\x02\x00"
+
+# ---- NPDU ----
+npdu_ver_1="\x01"
+
+npdu_ctl_apdu="\x00"
+npdu_ctl_reply_expected="\x04"
+npdu_ctl_src_spec="\x08"
+npdu_ctl_dst_spec="\x20"
+npdu_ctl_dst_reply="\x24"
+npdu_ctl_dst_src="\x28"
+npdu_ctl_netmsg="\x80"
+npdu_ctl_netmsg_dst="\xa0"
+
+dnet_broadcast="\xff\xff"
+dlen_0="\x00"
+hop_255="\xff"
+
+netmsg_who_is_router="\x00"
+netmsg_i_am_router="\x01"
+netmsg_i_could_be_router="\x02"
+netmsg_reject_message_to_network="\x03"
+netmsg_router_busy="\x04"
+netmsg_router_available="\x05"
+netmsg_init_routing_table="\x06"
+netmsg_init_routing_table_ack="\x07"
+
+# ---- APDU type nibble / common fields ----
+apdu_confirmed_req="\x00"
+apdu_confirmed_req_sa="\x02"
+apdu_confirmed_req_more="\x04"
+apdu_confirmed_req_seg="\x08"
+
+apdu_unconfirmed_req="\x10"
+apdu_simple_ack="\x20"
+apdu_complex_ack="\x30"
+apdu_segment_ack="\x40"
+apdu_error="\x50"
+apdu_reject="\x60"
+apdu_abort="\x70"
+
+max_apdu_50="\x00"
+max_apdu_128="\x01"
+max_apdu_206="\x02"
+max_apdu_480="\x03"
+max_apdu_1024="\x04"
+max_apdu_1476="\x05"
+
+invoke_00="\x00"
+invoke_01="\x01"
+invoke_7f="\x7f"
+invoke_ff="\xff"
+
+# ---- Unconfirmed service choice ----
+svc_ucov_notification="\x02"
+svc_unconfirmed_private_transfer="\x04"
+svc_time_synchronization="\x06"
+svc_who_has="\x07"
+svc_who_is="\x08"
+svc_utc_time_synchronization="\x09"
+svc_write_group="\x0a"
+
+# ---- Confirmed service choice ----
+svc_acknowledge_alarm="\x00"
+svc_subscribe_cov="\x05"
+svc_atomic_read_file="\x06"
+svc_atomic_write_file="\x07"
+svc_create_object="\x0a"
+svc_delete_object="\x0b"
+svc_read_property="\x0c"
+svc_read_property_multiple="\x0e"
+svc_write_property="\x0f"
+svc_write_property_multiple="\x10"
+svc_device_communication_control="\x11"
+svc_confirmed_private_transfer="\x12"
+svc_reinitialize_device="\x14"
+svc_read_range="\x1a"
+svc_get_alarm_summary="\x03"
+svc_get_event_information="\x1d"
+
+# ---- Common BACnet tags ----
+ctx0_objid="\x0c"
+ctx1_prop_1="\x19"
+ctx1_prop_2="\x1a"
+ctx2_array_1="\x29"
+ctx2_array_2="\x2a"
+ctx3_open="\x3e"
+ctx3_close="\x3f"
+ctx4_open="\x4e"
+ctx4_close="\x4f"
+
+app_null="\x00"
+app_bool_false="\x10"
+app_bool_true="\x11"
+app_uint8="\x21"
+app_uint16="\x22"
+app_real="\x44"
+app_enum1="\x91"
+
+real_0="\x00\x00\x00\x00"
+real_1="\x3f\x80\x00\x00"
+real_100="\x42\xc8\x00\x00"
+
+enum_0="\x00"
+enum_1="\x01"
+
+# ---- Common object identifiers (4-byte BACnetObjectIdentifier payload) ----
+# analog-input(0), analog-output(1), analog-value(2), binary-input(3),
+# binary-output(4), binary-value(5), device(8), msi(13), mso(14), msv(19)
+
+obj_ai_0="\x00\x00\x00\x00"
+obj_ai_1="\x00\x00\x00\x01"
+
+obj_ao_0="\x00\x40\x00\x00"
+obj_ao_1="\x00\x40\x00\x01"
+
+obj_av_0="\x00\x80\x00\x00"
+obj_av_1="\x00\x80\x00\x01"
+
+obj_bi_0="\x00\xc0\x00\x00"
+obj_bi_1="\x00\xc0\x00\x01"
+
+obj_bo_0="\x01\x00\x00\x00"
+obj_bo_1="\x01\x00\x00\x01"
+
+obj_bv_0="\x01\x40\x00\x00"
+obj_bv_1="\x01\x40\x00\x01"
+
+obj_dev_0="\x02\x00\x00\x00"
+obj_dev_123="\x02\x00\x00\x7b"
+
+obj_msi_0="\x03\x40\x00\x00"
+obj_mso_0="\x03\x80\x00\x00"
+obj_nc_0="\x03\xc0\x00\x00"
+obj_msv_0="\x04\xc0\x00\x00"
+obj_trendlog_0="\x05\x00\x00\x00"
+
+# ---- Common property identifiers ----
+prop_description="\x1c"
+prop_object_identifier="\x4b"
+prop_object_list="\x4c"
+prop_object_name="\x4d"
+prop_object_type="\x4f"
+prop_out_of_service="\x51"
+prop_present_value="\x55"
+prop_priority="\x56"
+prop_priority_array="\x57"
+prop_number_of_states="\x4a"
+prop_status_flags="\x6f"
+prop_state_text="\x6e"
+prop_reliability="\x67"
+prop_relinquish_default="\x68"
+prop_units="\x75"
+prop_vendor_identifier="\x78"
+prop_vendor_name="\x79"
+
+# ---- Small packet skeletons ----
+# local Who-Is over BACnet/IP unicast
+pkt_whois_local="\x81\x0a\x00\x08\x01\x00\x10\x08"
+
+# global Who-Is over BACnet/IP broadcast
+pkt_whois_global="\x81\x0b\x00\x0c\x01\x20\xff\xff\x00\xff\x10\x08"
+
+# ReadProperty: analog-input, instance 0, present-value
+pkt_readprop_ai0_pv="\x81\x0a\x00\x11\x01\x04\x02\x03\x00\x0c\x0c\x00\x00\x00\x00\x19\x55"
+
+# ReadProperty: device, instance 0, object-name
+pkt_readprop_dev0_name="\x81\x0a\x00\x11\x01\x04\x02\x03\x01\x0c\x0c\x02\x00\x00\x00\x19\x4d"
+
+# ReadProperty: device, instance 123, object-list
+pkt_readprop_dev123_objlist="\x81\x0a\x00\x11\x01\x04\x02\x03\x02\x0c\x0c\x02\x00\x00\x7b\x19\x4c"
+
+# WriteProperty: binary-output, instance 0, present-value = active(enum 1)
+pkt_writeprop_bo0_active="\x81\x0a\x00\x15\x01\x04\x00\x05\x01\x0f\x0c\x01\x00\x00\x00\x19\x55\x3e\x91\x01\x3f"
+
+# WriteProperty: analog-output, instance 0, present-value = REAL 1.0
+pkt_writeprop_ao0_real1="\x81\x0a\x00\x18\x01\x04\x00\x05\x02\x0f\x0c\x00\x40\x00\x00\x19\x55\x3e\x44\x3f\x80\x00\x00\x3f"
+
+# ReinitializeDevice with minimal body shape
+pkt_reinit_min="\x81\x0a\x00\x0f\x01\x04\x00\x05\x03\x14\x09\x00\x19\x00"
+
+# DeviceCommunicationControl with minimal body shape
+pkt_dcc_min="\x81\x0a\x00\x10\x01\x04\x00\x05\x04\x11\x09\x00\x19\x00\x29\x00"
+
+# CreateObject with minimal opening/closing tags
+pkt_create_object_min="\x81\x0a\x00\x12\x01\x04\x00\x05\x05\x0a\x0e\x91\x00\x0f\x1e\x0c\x00\x00\x00\x00\x1f"
+
+# DeleteObject device/ai style minimal shape
+pkt_delete_object_min="\x81\x0a\x00\x10\x01\x04\x00\x05\x06\x0b\x0c\x00\x00\x00\x00"
+
+# ReadRange minimal shape against trend-log 0
+pkt_readrange_tl0="\x81\x0a\x00\x16\x01\x04\x02\x03\x07\x1a\x0c\x05\x00\x00\x00\x19\x55\x29\x00\x3e\x21\x01\x3f"

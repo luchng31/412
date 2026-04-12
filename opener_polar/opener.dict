@@ -1,0 +1,191 @@
+# =========================
+# OpENer / EtherNet-IP AFL dictionary
+# tuned for stdin -> HandleReceivedExplictTcpData()
+# =========================
+
+# ---- ENIP encapsulation commands (little-endian) ----
+"enip_cmd_nop"="\x00\x00"
+"enip_cmd_list_services"="\x04\x00"
+"enip_cmd_list_identity"="\x63\x00"
+"enip_cmd_list_interfaces"="\x64\x00"
+"enip_cmd_register_session"="\x65\x00"
+"enip_cmd_unregister_session"="\x66\x00"
+"enip_cmd_send_rr_data"="\x6f\x00"
+"enip_cmd_send_unit_data"="\x70\x00"
+
+# ---- common small integer fields ----
+"u16_0"="\x00\x00"
+"u16_1"="\x01\x00"
+"u16_2"="\x02\x00"
+"u16_4"="\x04\x00"
+"u16_8"="\x08\x00"
+"u16_10"="\x0a\x00"
+"u16_16"="\x10\x00"
+"u16_24"="\x18\x00"
+"u16_32"="\x20\x00"
+
+"u32_0"="\x00\x00\x00\x00"
+"u32_1"="\x01\x00\x00\x00"
+"u32_deadbeef"="\xef\xbe\xad\xde"
+"u32_ffffffff"="\xff\xff\xff\xff"
+
+# ---- standard ENIP header pieces ----
+"enip_status_0"="\x00\x00\x00\x00"
+"enip_sender_ctx_0"="\x00\x00\x00\x00\x00\x00\x00\x00"
+"enip_options_0"="\x00\x00\x00\x00"
+"register_session_payload_v1"="\x01\x00\x00\x00"
+
+# ---- complete minimal fixed ENIP requests ----
+"enip_list_services_min"="\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+"enip_list_identity_min"="\x63\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+"enip_list_interfaces_min"="\x64\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+"enip_register_session_min"="\x65\x00\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00"
+
+# ---- CPF general blocks ----
+"cpf_itemcount_1"="\x01\x00"
+"cpf_itemcount_2"="\x02\x00"
+"cpf_itemcount_3"="\x03\x00"
+"cpf_itemcount_4"="\x04\x00"
+
+"cpf_null_address"="\x00\x00\x00\x00"
+"cpf_list_identity_resp"="\x0c\x00"
+"cpf_connection_address_hdr"="\xa1\x00\x04\x00"
+"cpf_connected_data_hdr"="\xb1\x00"
+"cpf_unconnected_data_hdr"="\xb2\x00"
+"cpf_list_service_resp"="\x00\x01"
+"cpf_sockaddr_ot_hdr"="\x00\x80\x10\x00"
+"cpf_sockaddr_to_hdr"="\x01\x80\x10\x00"
+"cpf_sequenced_addr_hdr"="\x02\x80\x08\x00"
+
+# ---- SendRRData / SendUnitData body helpers ----
+"rr_data_prefix"="\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00\xb2\x00"
+"unit_data_prefix"="\x00\x00\x00\x00\x00\x00\x02\x00\xa1\x00\x04\x00\xb1\x00"
+"conn_id_0"="\x00\x00\x00\x00"
+"conn_seq_0"="\x00\x00\x00\x00"
+"conn_seq_1"="\x01\x00\x00\x00"
+
+# ---- socket address info helpers (big-endian fields inside item body) ----
+"af_inet_be"="\x00\x02"
+"udp_2222_be"="\x08\xae"
+"ipv4_zero_be"="\x00\x00\x00\x00"
+"sockaddr_zero_tail"="\x00\x00\x00\x00\x00\x00\x00\x00"
+
+# ---- CIP service codes ----
+"svc_get_attribute_all"="\x01"
+"svc_set_attribute_all"="\x02"
+"svc_get_attribute_list"="\x03"
+"svc_set_attribute_list"="\x04"
+"svc_reset"="\x05"
+"svc_start"="\x06"
+"svc_stop"="\x07"
+"svc_create"="\x08"
+"svc_delete"="\x09"
+"svc_multiple_service_packet"="\x0a"
+"svc_apply_attributes"="\x0d"
+"svc_get_attribute_single"="\x0e"
+"svc_set_attribute_single"="\x10"
+"svc_find_next_object_instance"="\x11"
+"svc_restore"="\x15"
+"svc_save"="\x16"
+"svc_noop"="\x17"
+"svc_forward_close"="\x4e"
+"svc_unconnected_send"="\x52"
+"svc_forward_open"="\x54"
+"svc_large_forward_open"="\x5b"
+
+# ---- EPATH segment bytes ----
+"seg_class8"="\x20"
+"seg_instance8"="\x24"
+"seg_member8"="\x28"
+"seg_conn_pt8"="\x2c"
+"seg_attribute8"="\x30"
+
+# ---- class ids used by stock OpENer/sample app ----
+"class_identity"="\x01"
+"class_assembly"="\x04"
+"class_connection_manager"="\x06"
+"class_qos"="\x48"
+"class_tcpip"="\xf5"
+"class_ethernet_link"="\xf6"
+
+# ---- commonly useful object paths ----
+"path_identity_1"="\x20\x01\x24\x01"
+"path_assembly_100"="\x20\x04\x24\x64"
+"path_assembly_150"="\x20\x04\x24\x96"
+"path_assembly_151"="\x20\x04\x24\x97"
+"path_assembly_152"="\x20\x04\x24\x98"
+"path_assembly_153"="\x20\x04\x24\x99"
+"path_assembly_154"="\x20\x04\x24\x9a"
+"path_connection_manager_1"="\x20\x06\x24\x01"
+"path_qos_1"="\x20\x48\x24\x01"
+"path_tcpip_1"="\x20\xf5\x24\x01"
+"path_ethlink_1"="\x20\xf6\x24\x01"
+
+# ---- high-value attribute paths ----
+"path_identity_attr1"="\x20\x01\x24\x01\x30\x01"
+"path_identity_attr2"="\x20\x01\x24\x01\x30\x02"
+"path_identity_attr3"="\x20\x01\x24\x01\x30\x03"
+"path_identity_attr4"="\x20\x01\x24\x01\x30\x04"
+"path_identity_attr5"="\x20\x01\x24\x01\x30\x05"
+"path_identity_attr6"="\x20\x01\x24\x01\x30\x06"
+"path_identity_attr7"="\x20\x01\x24\x01\x30\x07"
+"path_identity_attr8"="\x20\x01\x24\x01\x30\x08"
+
+"path_asm100_attr3"="\x20\x04\x24\x64\x30\x03"
+"path_asm150_attr3"="\x20\x04\x24\x96\x30\x03"
+"path_asm151_attr3"="\x20\x04\x24\x97\x30\x03"
+"path_asm154_attr3"="\x20\x04\x24\x9a\x30\x03"
+
+"path_tcpip_attr1"="\x20\xf5\x24\x01\x30\x01"
+"path_tcpip_attr3"="\x20\xf5\x24\x01\x30\x03"
+"path_tcpip_attr5"="\x20\xf5\x24\x01\x30\x05"
+"path_tcpip_attr6"="\x20\xf5\x24\x01\x30\x06"
+"path_tcpip_attr8"="\x20\xf5\x24\x01\x30\x08"
+"path_tcpip_attr9"="\x20\xf5\x24\x01\x30\x09"
+"path_tcpip_attr10"="\x20\xf5\x24\x01\x30\x0a"
+"path_tcpip_attr13"="\x20\xf5\x24\x01\x30\x0d"
+
+"path_qos_attr1"="\x20\x48\x24\x01\x30\x01"
+"path_qos_attr2"="\x20\x48\x24\x01\x30\x02"
+"path_qos_attr8"="\x20\x48\x24\x01\x30\x08"
+
+"path_ethlink_attr2"="\x20\xf6\x24\x01\x30\x02"
+"path_ethlink_attr4"="\x20\xf6\x24\x01\x30\x04"
+"path_ethlink_attr5"="\x20\xf6\x24\x01\x30\x05"
+"path_ethlink_attr6"="\x20\xf6\x24\x01\x30\x06"
+"path_ethlink_attr7"="\x20\xf6\x24\x01\x30\x07"
+"path_ethlink_attr11"="\x20\xf6\x24\x01\x30\x0b"
+
+# ---- common instance / assembly ids ----
+"inst_1"="\x01"
+"inst_100"="\x64"
+"inst_150"="\x96"
+"inst_151"="\x97"
+"inst_152"="\x98"
+"inst_153"="\x99"
+"inst_154"="\x9a"
+
+# ---- common attribute ids ----
+"attr_1"="\x01"
+"attr_2"="\x02"
+"attr_3"="\x03"
+"attr_4"="\x04"
+"attr_5"="\x05"
+"attr_6"="\x06"
+"attr_7"="\x07"
+"attr_8"="\x08"
+"attr_9"="\x09"
+"attr_10"="\x0a"
+"attr_11"="\x0b"
+"attr_13"="\x0d"
+
+# ---- mutation helpers for common request skeletons ----
+"cip_req_get_attr_single_identity7"="\x0e\x03\x20\x01\x24\x01\x30\x07"
+"cip_req_get_attr_single_asm154_data"="\x0e\x03\x20\x04\x24\x9a\x30\x03"
+"cip_req_set_attr_single_asm154_data"="\x10\x03\x20\x04\x24\x9a\x30\x03"
+"cip_req_get_attr_all_tcpip"="\x01\x02\x20\xf5\x24\x01"
+"cip_req_get_attr_all_qos"="\x01\x02\x20\x48\x24\x01"
+"cip_req_ucmm_cm"="\x52\x02\x20\x06\x24\x01"
+"cip_req_forward_open_cm"="\x54\x02\x20\x06\x24\x01"
+"cip_req_large_forward_open_cm"="\x5b\x02\x20\x06\x24\x01"
+"cip_req_forward_close_cm"="\x4e\x02\x20\x06\x24\x01"
