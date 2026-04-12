@@ -1,0 +1,221 @@
+name: random-mopt-iec61850
+run-name: random iec61850 fuzzing [${{ inputs.run_segment }}/${{ inputs.max_segments }}] on ${{ inputs.target_branch }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Branch to fuzz'
+        required: true
+        default: 'main'
+        type: string
+      run_segment:
+        description: 'Current fuzzing segment number'
+        required: true
+        default: '1'
+        type: string
+      max_segments:
+        description: 'Maximum number of chained fuzzing segments'
+        required: true
+        default: '8'
+        type: string
+      resume_run_id:
+        description: 'Previous workflow run ID used for resume'
+        required: false
+        default: ''
+        type: string
+      resume_artifact_name:
+        description: 'Artifact name that contains previous AFL outputs'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+env:
+  # ===== 基本标识 =====
+  PROTOCOL_NAME: iec61850
+  TOOL_NAME: aflfast
+
+  # ===== AFL系列工具路径 =====
+  # AFL      -> afl
+  # AFLFast  -> aflfast
+  # MOpt     -> mopt
+  # PolarAFL -> polar
+  FUZZER_DIR: mopt
+  FUZZER_BIN: afl-fuzz
+
+  # ===== 目标目录 / 目标可执行文件 / 字典 =====
+  # 默认示例：bacnet + afl
+  TARGET_DIR: iec61850_mopt
+  TARGET_BIN: iec61850
+  DICT_FILE: iec61850.dict
+
+  # ===== 初始种子目录（相对仓库根目录） =====
+  SEED_DIR: SRAG/iec61850
+
+  # ===== 输出 / 归档 =====
+  OUTPUT_DIR: outputs
+  RESULTS_ARCHIVE: iec61850-findings.tar.gz
+  ARTIFACT_PREFIX: iec61850-findings
+
+  # ===== 当前workflow文件名（供链式触发下一段） =====
+  SELF_WORKFLOW_FILE: random_mopt_iec61850.yml
+
+  # ===== 运行时长（秒） =====
+  FUZZ_SECONDS: "21300"
+
+  # ===== 额外运行库；默认 bacnet + afl 不需要 =====
+  # 例如 PolarAFL 可改成: libcjson1
+  EXTRA_APT_PACKAGES: "libini-config-dev libseccomp-dev"
+
+jobs:
+  fuzzing:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch }}
+
+      - name: Install runtime libraries for target
+        shell: bash
+        run: |
+          set -e
+          sudo apt-get update
+
+          packages=(libstdc++6 libgcc-s1)
+
+          if [ -n "${EXTRA_APT_PACKAGES}" ]; then
+            # shellcheck disable=SC2206
+            extra_packages=(${EXTRA_APT_PACKAGES})
+            packages+=("${extra_packages[@]}")
+          fi
+
+          sudo apt-get install -y --no-install-recommends "${packages[@]}"
+          sudo ldconfig
+
+          git clone https://github.com/zardus/preeny.git
+          cd preeny
+          make
+          ls -l x86_64-linux-gnu/
+
+      - name: Restore AFL state from previous segment
+        if: ${{ inputs.resume_run_id != '' && inputs.resume_artifact_name != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -e
+          rm -rf "${TARGET_DIR:?}/${OUTPUT_DIR}"
+          mkdir -p /tmp/afl-resume
+
+          gh run download "${{ inputs.resume_run_id }}" \
+            -n "${{ inputs.resume_artifact_name }}" \
+            -D /tmp/afl-resume
+
+          tar -xzf "/tmp/afl-resume/${RESULTS_ARCHIVE}" -C "${TARGET_DIR}"
+          test -d "${TARGET_DIR}/${OUTPUT_DIR}/queue"
+
+          echo "Resumed AFL output from run ${{ inputs.resume_run_id }} / artifact ${{ inputs.resume_artifact_name }}"
+
+      - name: Prepare runner for crash detection
+        shell: bash
+        run: |
+          set -e
+          echo "Before: $(cat /proc/sys/kernel/core_pattern)"
+          sudo sysctl -w kernel.core_pattern=core
+          echo "After:  $(cat /proc/sys/kernel/core_pattern)"
+
+      - name: Run single AFL instance
+        shell: bash
+        run: |
+          cd "${TARGET_DIR}"
+
+          chmod +x "./${TARGET_BIN}" "../${FUZZER_DIR}/${FUZZER_BIN}"
+
+          if [ -d "${OUTPUT_DIR}/queue" ]; then
+            input_args=(-i-)
+            echo "Resume mode: use existing outputs"
+          else
+            rm -rf "${OUTPUT_DIR}"
+            input_args=(-i "../${SEED_DIR}")
+            echo "Fresh mode: use ${SEED_DIR} as initial corpus"
+          fi
+
+          set +e
+            LD_PRELOAD="${GITHUB_WORKSPACE}/preeny/x86_64-linux-gnu/desock.so" timeout "${FUZZ_SECONDS}" "../${FUZZER_DIR}/${FUZZER_BIN}" "${input_args[@]}"  -o "${OUTPUT_DIR}" -m none -x "${DICT_FILE}"  -L 0 -- "./${TARGET_BIN}"
+          rc=$?
+          set -e
+
+          echo "afl-fuzz exit code=${rc}"
+
+          # timeout 返回 124 视为正常结束
+          if [ "${rc}" -ne 0 ] && [ "${rc}" -ne 124 ]; then
+            exit "${rc}"
+          fi
+
+      - name: Print final fuzzer_stats
+        if: always()
+        shell: bash
+        run: |
+          cd "${TARGET_DIR}"
+          echo "===== final fuzzer_stats ====="
+
+          if [ -f "${OUTPUT_DIR}/fuzzer_stats" ]; then
+            cat "${OUTPUT_DIR}/fuzzer_stats"
+          else
+            echo "No ${OUTPUT_DIR}/fuzzer_stats found"
+          fi
+
+      - name: Pack fuzzing results
+        if: always()
+        shell: bash
+        run: |
+          set -e
+          if [ -d "${TARGET_DIR}/${OUTPUT_DIR}" ]; then
+            tar -czf "${RESULTS_ARCHIVE}" -C "${TARGET_DIR}" "${OUTPUT_DIR}"
+          else
+            echo "${TARGET_DIR}/${OUTPUT_DIR} not found, skip packing"
+          fi
+
+      - name: Upload fuzzing results archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_PREFIX }}-seg-${{ inputs.run_segment }}
+          path: ${{ env.RESULTS_ARCHIVE }}
+          if-no-files-found: warn
+
+      - name: Trigger next fuzzing segment
+        if: ${{ success() && fromJSON(inputs.run_segment) < fromJSON(inputs.max_segments) }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -e
+          next_segment=$(( ${{ inputs.run_segment }} + 1 ))
+          current_artifact="${ARTIFACT_PREFIX}-seg-${{ inputs.run_segment }}"
+
+          curl -fsSL \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/${SELF_WORKFLOW_FILE}/dispatches" \
+            -d @- <<EOF
+          {
+            "ref": "${{ inputs.target_branch }}",
+            "inputs": {
+              "target_branch": "${{ inputs.target_branch }}",
+              "run_segment": "${next_segment}",
+              "max_segments": "${{ inputs.max_segments }}",
+              "resume_run_id": "${{ github.run_id }}",
+              "resume_artifact_name": "${current_artifact}"
+            }
+          }
+          EOF
