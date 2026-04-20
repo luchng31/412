@@ -1,0 +1,11 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CUSTOM_INFO_PROGRAM=./server_example_basic_io
+AFL_CUSTOM_INFO_PROGRAM_ARGV=8101
+AFL_CUSTOM_INFO_OUT=outputs/out_m0
+AFL_FINAL_SYNC=1
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+# command line:
+'afl-fuzz' '-i' 'inputs/' '-o' 'outputs' '-M' 'out_m0' '-m' 'none' '-p' 'explore' '-x' 'lib.dict' '-t' '3000+' '--' './server_example_basic_io' '8101'
