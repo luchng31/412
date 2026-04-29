@@ -1,0 +1,12 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CUSTOM_MUTATOR_LIBRARY=/root/wc/lib60870/new-421/lib60870-v2.4.0-1/lib60870-C/lib60870/mutator.so
+AFL_CUSTOM_INFO_PROGRAM=./cs104_server
+AFL_CUSTOM_INFO_PROGRAM_ARGV=8101
+AFL_CUSTOM_INFO_OUT=outputs/out_m0
+AFL_FINAL_SYNC=1
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+# command line:
+'afl-fuzz' '-i' 'inputs/' '-o' 'outputs' '-M' 'out_m0' '-m' 'none' '-p' 'explore' '-x' 'lib.dict' '--' './cs104_server' '8101'

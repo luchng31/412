@@ -1,0 +1,13 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CMPLOG_ONLY_NEW=1
+AFL_CUSTOM_MUTATOR_LIBRARY=/root/wc/bacnet/new-425/v1.4.3/bacnet/mutator.so
+AFL_CUSTOM_INFO_PROGRAM=./bacnet
+AFL_CUSTOM_INFO_PROGRAM_ARGV=1004
+AFL_CUSTOM_INFO_OUT=outputs/s3
+AFL_DISABLE_TRIM=1
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+# command line:
+'afl-fuzz' '-i' 'inputs' '-o' 'outputs' '-S' 's3' '-m' 'none' '-t' '2000+' '-p' 'exploit' '-x' 'lib.dict' '-c' './bacnet.cmplog' '--' './bacnet' '1004'

@@ -1,0 +1,11 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CMPLOG_ONLY_NEW=1
+AFL_CUSTOM_INFO_PROGRAM=./bacnet
+AFL_CUSTOM_INFO_PROGRAM_ARGV=1003
+AFL_CUSTOM_INFO_OUT=outputs/s2
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+# command line:
+'afl-fuzz' '-i' 'inputs' '-o' 'outputs' '-S' 's2' '-m' 'none' '-t' '2000+' '-p' 'rare' '-x' 'lib.dict' '-c' './bacnet.cmplog' '--' './bacnet' '1003'

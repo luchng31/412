@@ -1,0 +1,74 @@
+# Snap7 harness dictionary for the generated TS7Server feeder corpus
+# Harness-level mode bytes
+mode_normal="\x00"
+mode_resless="\x01"
+
+# Harness flag bytes (low 2 bits choose PDURequest: 240/480/960/2048; bit2 toggles work interval)
+flags_pdu240="\x00"
+flags_pdu480="\x01"
+flags_pdu960="\x02"
+flags_pdu2048="\x03"
+flags_workint="\x04"
+
+# Action headers: opcode + little-endian length
+act_connect="\x01\x00\x00"
+act_send_auto_empty="\x02\x00\x00"
+act_send_raw_empty="\x03\x00\x00"
+act_send_split_auto_empty="\x04\x00\x00"
+act_send_split_raw_empty="\x05\x00\x00"
+act_recv1="\x06\x01\x00"
+act_close="\x07\x00\x00"
+act_reconnect="\x08\x00\x00"
+act_gen_read_empty="\x09\x00\x00"
+act_gen_write_empty="\x0a\x00\x00"
+
+# GenRead 6-byte item descriptors: area_idx, wordlen_idx, db_idx, start_lo, start_hi, count_idx
+ri_db_byte_db1="\x00\x01\x00\x00\x00\x00"
+ri_db_bit_db1="\x00\x00\x00\x00\x00\x00"
+ri_mk_bit="\x01\x00\x00\x01\x00\x00"
+ri_pe_bit="\x02\x00\x00\x07\x00\x00"
+ri_pa_bit="\x03\x00\x00\x08\x00\x00"
+ri_tm="\x04\x05\x00\x03\x00\x02"
+ri_ct="\x05\x04\x00\x04\x00\x02"
+ri_db_word_db16="\x00\x02\x07\x10\x00\x07"
+ri_db_dword_db64="\x00\x03\x0b\x40\x00\x08"
+
+# GenWrite 8-byte item descriptors: area_idx, wordlen_idx, db_idx, start_lo, start_hi, count_idx, seed0, seed1
+wi_db_byte_db1="\x00\x01\x00\x00\x00\x00\x41\x90"
+wi_db_bit="\x00\x00\x00\x00\x00\x00\x01\x02"
+wi_mk_bit="\x01\x00\x00\x01\x00\x00\x03\x04"
+wi_tm="\x04\x05\x00\x02\x00\x02\x05\x06"
+wi_ct="\x05\x04\x00\x02\x00\x02\x07\x08"
+wi_db_word_db16="\x00\x02\x07\xff\x00\x08\x55\xaa"
+
+# S7 PDU prefixes and function bytes
+s7_job="\x32\x01\x00\x00"
+s7_ud="\x32\x07\x00\x00"
+fun_read="\x04"
+fun_write="\x05"
+fun_setup="\xf0"
+fun_ctrl="\x28"
+fun_stop="\x29"
+
+# Exact user-data parameter block used by valid SZL requests
+ud_szl_param="\x00\x01\x12\x04\x11\x44\x01\x00"
+ud_szl_data_0011="\xff\x09\x00\x04\x00\x11\x00\x01"
+ud_szl_data_001c="\xff\x09\x00\x04\x00\x1c\x00\x01"
+
+# Exploratory userdata parameter headers for other groups
+ud_prog_param="\x00\x01\x12\x04\x11\x41\x01\x00"
+ud_cyclic_param="\x00\x01\x12\x04\x11\x42\x01\x00"
+ud_block_param="\x00\x01\x12\x04\x11\x43\x01\x00"
+ud_sec_param="\x00\x01\x12\x04\x11\x45\x01\x00"
+ud_time_get_param="\x00\x01\x12\x04\x11\x47\x01\x00"
+ud_time_set_param="\x00\x01\x12\x04\x11\x47\x02\x00"
+
+# Small userdata data blocks
+ud_block_listall_data="\xff\x09\x00\x02\x00\x00"
+ud_sec_pwd_8="\xff\x09\x00\x08ABCDEFGH"
+ud_clock_dt="\xff\x09\x00\x08\x25\x04\x24\x12\x34\x56\x70\x01"
+
+# Useful control payload fillers
+ctrl_prog="P_PROGRAM"
+ctrl_comp="COMPRESS_AREA"
+ctrl_copy="COPY_RAM_ROM_NOW"

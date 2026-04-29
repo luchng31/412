@@ -1,0 +1,14 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CUSTOM_MUTATOR_LIBRARY=/root/wc/PLC/CANopenDemo/demo/canopennode/mutator.so
+AFL_CUSTOM_INFO_PROGRAM=./opennode
+AFL_CUSTOM_INFO_PROGRAM_ARGV=vcan0 @@
+AFL_CUSTOM_INFO_OUT=outputs/out_m0
+AFL_FINAL_SYNC=1
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+AFL_USE_ASAN=1
+AFL_USE_UBSAN=1
+# command line:
+'afl-fuzz' '-i' 'inputs/' '-o' 'outputs' '-M' 'out_m0' '-m' 'none' '-p' 'explore' '-x' 'lib.dict' '-t' '3000+' '--' './opennode' 'vcan0' '@@'

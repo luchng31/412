@@ -1,0 +1,11 @@
+# environment variables:
+AFL_AUTORESUME=1
+AFL_CUSTOM_INFO_PROGRAM=./opennode
+AFL_CUSTOM_INFO_PROGRAM_ARGV=vcan2 @@
+AFL_CUSTOM_INFO_OUT=outputs/out_s2
+AFL_DISABLE_TRIM=1
+AFL_IMPORT_FIRST=1
+AFL_SKIP_CPUFREQ=1
+AFL_TESTCACHE_SIZE=200
+# command line:
+'afl-fuzz' '-i' 'inputs' '-o' 'outputs' '-S' 'out_s2' '-m' 'none' '-p' 'exploit' '-L' '0' '-x' 'lib.dict' '-t' '3000+' '--' './opennode' 'vcan2' '@@'
